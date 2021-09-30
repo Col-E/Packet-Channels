@@ -29,3 +29,7 @@ private boolean handleCustom(ByteChannel channel, CustomPacket packet) {
     return true;
 }
 ```
+
+To send a `Packet` from the `Client` to the `Server` a `Client` can call `write(packet)`.
+
+To send a `Packet` from the `Server` back to a `Client` the `Server` must specify the target channel via `PacketIO.write(channel, packet)`.

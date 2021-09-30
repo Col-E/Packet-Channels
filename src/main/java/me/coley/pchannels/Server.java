@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * A basic server setup using NIO {@link SocketChannel}s.
@@ -23,11 +24,12 @@ import java.util.concurrent.Executors;
  */
 public abstract class Server {
 	private static final Logger logger = LoggerFactory.getLogger(Server.class);
-	private final ServerSocketChannel socket;
 	private final ExecutorService executorService = Executors.newWorkStealingPool();
 	private final Collection<SocketChannel> activeClients = new CopyOnWriteArraySet<>();
 	private final PacketHandlerDelegator delegator = new PacketHandlerDelegator();
+	private final ServerSocketChannel socket;
 	private boolean accepting = true;
+	private Future<?> handlerThread;
 
 	/**
 	 * @throws IOException
@@ -51,8 +53,7 @@ public abstract class Server {
 	}
 
 	/**
-	 * Start the server. This will occupy the current thread with waiting on new client connections.
-	 * To stop receiving new clients call {@link #stop()}.
+	 * Start the server. To stop receiving new clients call {@link #stop()}.
 	 *
 	 * @throws IOException
 	 * 		When {@link ServerSocketChannel#accept()} fails.
@@ -71,6 +72,8 @@ public abstract class Server {
 	 * 		When clients cannot be notified of server closure.
 	 */
 	public void stop() throws IOException {
+		// Stop the handling thread (stops reading new items)
+		handlerThread.cancel(true);
 		// Notify all clients that the server is closing.
 		for (SocketChannel channel : activeClients) {
 			PacketIO.close(channel);
@@ -88,22 +91,24 @@ public abstract class Server {
 	 * 		Client channel connection.
 	 */
 	private void handle(SocketChannel channel) {
-		SocketAddress address = null;
+		SocketAddress address;
 		try {
 			address = channel.getRemoteAddress();
 		} catch (IOException ex) {
 			logger.error("Cannot get address from channel connection?", ex);
 			return;
 		}
-		try {
+		handlerThread = executorService.submit(() -> {
 			logger.debug("Connected: {}", address);
 			activeClients.add(channel);
-			PacketIO.handleLoop(channel, channel::isConnected, delegator);
-		} catch (Throwable t) {
-			logger.error("Error: {}", address, t);
-		}
-		logger.debug("Disconnect: {}", address);
-		activeClients.remove(channel);
+			try {
+				PacketIO.handleLoop(channel, channel::isConnected, delegator);
+			} catch (Throwable t) {
+				logger.error("Error: {}", address, t);
+			}
+			logger.debug("Disconnect: {}", address);
+			activeClients.remove(channel);
+		});
 	}
 
 	/**

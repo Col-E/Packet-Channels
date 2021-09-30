@@ -2,6 +2,7 @@ package me.coley.pchannels;
 
 import me.coley.pchannels.packet.PacketFactory;
 import me.coley.pchannels.packet.PacketHandlerDelegator;
+import me.coley.pchannels.packet.PacketIO;
 import me.coley.pchannels.packet.impl.ChatPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,15 @@ public class TestServer extends Server {
 	}
 
 	private boolean handleChat(ByteChannel channel, ChatPacket packet) {
-		logger.info("<" + channel + "> " + packet.getMessage());
+		String msg = packet.getMessage();
+		logger.info("<" + channel + "> " + msg);
+		if (msg.contains("ping")) {
+			try {
+				PacketIO.write(channel, new ChatPacket("pong!"));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 		return true;
 	}
 
