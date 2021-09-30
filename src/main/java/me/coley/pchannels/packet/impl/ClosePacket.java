@@ -11,29 +11,24 @@ import java.io.DataOutputStream;
  *
  * @author Matt Coley
  */
-public class ClosePacket implements Packet
-{
-    @Override
-    public int getId()
-    {
-        return Constants.ID_CLOSE;
-    }
+public class ClosePacket implements Packet {
+	@Override
+	public int getId() {
+		return Constants.ID_CLOSE;
+	}
 
-    @Override
-    public int getLength()
-    {
-        return 0;
-    }
+	@Override
+	public int getLength() {
+		return 0;
+	}
 
-    @Override
-    public void read(DataInputStream in)
-    {
-        // no-op
-    }
+	@Override
+	public void read(DataInputStream in) {
+		// no-op
+	}
 
-    @Override
-    public void write(DataOutputStream out)
-    {
-        // no-op
-    }
+	@Override
+	public void write(DataOutputStream out) {
+		// no-op
+	}
 }

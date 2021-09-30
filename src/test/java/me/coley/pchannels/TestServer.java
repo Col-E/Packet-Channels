@@ -9,41 +9,33 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.channels.ByteChannel;
 
-public class TestServer extends Server
-{
-    private static final Logger logger = LoggerFactory.getLogger(TestServer.class);
+public class TestServer extends Server {
+	private static final Logger logger = LoggerFactory.getLogger(TestServer.class);
 
-    public TestServer() throws IOException
-    {
-        super();
-    }
+	public TestServer() throws IOException {
+		super();
+	}
 
-    @Override
-    protected void setup(PacketHandlerDelegator delegator)
-    {
-        delegator.register(TestConstants.ID_CHAT, this::handleChat);
-    }
+	@Override
+	protected void setup(PacketHandlerDelegator delegator) {
+		delegator.register(TestConstants.ID_CHAT, this::handleChat);
+	}
 
-    private boolean handleChat(ByteChannel channel, ChatPacket packet)
-    {
-        logger.info("<" + channel + "> " + packet.getMessage());
-        return true;
-    }
+	private boolean handleChat(ByteChannel channel, ChatPacket packet) {
+		logger.info("<" + channel + "> " + packet.getMessage());
+		return true;
+	}
 
-    static
-    {
-        PacketFactory.register(TestConstants.ID_CHAT, ChatPacket::new);
-    }
+	static {
+		PacketFactory.register(TestConstants.ID_CHAT, ChatPacket::new);
+	}
 
-    public static void main(String[] args)
-    {
-        try
-        {
-            Server server = new TestServer();
-            server.start();
-        } catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
+	public static void main(String[] args) {
+		try {
+			Server server = new TestServer();
+			server.start();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

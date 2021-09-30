@@ -6,18 +6,17 @@ package me.coley.pchannels.packet;
  *
  * @author Matt Coley
  */
-public interface PacketLoopCondition
-{
-    /**
-     * The intended usage will be to wrap some channel implementation's state getter.
-     * For example:
-     * <pre>
-     *     SocketChannel chanel = ...
-     *     PacketLoopCondition condition = channel::isConnected;
-     * </pre>
-     *
-     * @return {@code true} to continue reading packet data from a channel.
-     * {@code false} to stop reading data.
-     */
-    boolean shouldContinue();
+public interface PacketLoopCondition {
+	/**
+	 * The intended usage will be to wrap some channel implementation's state getter.
+	 * For example:
+	 * <pre>
+	 *     SocketChannel chanel = ...
+	 *     PacketLoopCondition condition = channel::isConnected;
+	 * </pre>
+	 *
+	 * @return {@code true} to continue reading packet data from a channel.
+	 * {@code false} to stop reading data.
+	 */
+	boolean shouldContinue();
 }

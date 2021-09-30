@@ -1,6 +1,5 @@
 package me.coley.pchannels;
 
-public class TestConstants
-{
-    public static final int ID_CHAT = 100;
+public class TestConstants {
+	public static final int ID_CHAT = 100;
 }
