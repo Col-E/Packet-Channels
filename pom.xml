@@ -7,6 +7,11 @@
     <groupId>me.coley</groupId>
     <artifactId>channels</artifactId>
     <version>1.0.0</version>
+
+    <properties>
+        <jmh.version>1.34</jmh.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -21,6 +26,7 @@
     </build>
 
     <dependencies>
+        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -31,6 +37,18 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
             <scope>test</scope>
+        </dependency>
+        <!-- Benchmark -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>${jmh.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>${jmh.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
