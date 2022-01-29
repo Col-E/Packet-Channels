@@ -28,7 +28,7 @@ public abstract class Server {
 	private final Collection<SocketChannel> activeClients = new CopyOnWriteArraySet<>();
 	private final PacketHandlerDelegator delegator = new PacketHandlerDelegator();
 	private final ServerSocketChannel socket;
-	private boolean accepting = true;
+	private volatile boolean accepting = true;
 	private Future<?> handlerThread;
 
 	/**
