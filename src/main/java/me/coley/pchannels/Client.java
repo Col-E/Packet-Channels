@@ -23,7 +23,7 @@ import java.util.concurrent.Future;
  */
 public abstract class Client {
 	private static final Logger logger = LoggerFactory.getLogger(Client.class);
-	private final ExecutorService executorService = Executors.newWorkStealingPool();
+	private final ExecutorService executorService = Threads.pool();
 	private final PacketHandlerDelegator delegator = new PacketHandlerDelegator();
 	private final InetAddress address;
 	private final int port;
@@ -83,7 +83,7 @@ public abstract class Client {
 	 * @throws IOException
 	 * 		When writing the closure packet fails, or when closing the channel fails.
 	 */
-	public void stop() throws IOException {
+	public void close() throws IOException {
 		// Stop the handling thread (stops reading new items)
 		handlerThread.cancel(true);
 		// Send a closure notice and leave

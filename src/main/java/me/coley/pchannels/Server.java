@@ -24,7 +24,7 @@ import java.util.concurrent.Future;
  */
 public abstract class Server {
 	private static final Logger logger = LoggerFactory.getLogger(Server.class);
-	private final ExecutorService executorService = Executors.newWorkStealingPool();
+	private final ExecutorService executorService = Threads.pool();
 	private final Collection<SocketChannel> activeClients = new CopyOnWriteArraySet<>();
 	private final PacketHandlerDelegator delegator = new PacketHandlerDelegator();
 	private final ServerSocketChannel socket;
@@ -53,7 +53,7 @@ public abstract class Server {
 	}
 
 	/**
-	 * Start the server. To stop receiving new clients call {@link #stop()}.
+	 * Start the server. To stop receiving new clients call {@link #close()}.
 	 *
 	 * @throws IOException
 	 * 		When {@link ServerSocketChannel#accept()} fails.
@@ -71,7 +71,7 @@ public abstract class Server {
 	 * @throws IOException
 	 * 		When clients cannot be notified of server closure.
 	 */
-	public void stop() throws IOException {
+	public void close() throws IOException {
 		// Stop the handling thread (stops reading new items)
 		handlerThread.cancel(true);
 		// Notify all clients that the server is closing.

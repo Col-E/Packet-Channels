@@ -40,7 +40,8 @@ public class TestClient extends Client {
 			Thread.sleep(1000);
 			client.write(new ChatPacket("goodbye"));
 			logger.info("goodbye");
-			client.stop();
+			Thread.sleep(1000);
+			client.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
